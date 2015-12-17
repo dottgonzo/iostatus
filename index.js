@@ -23,17 +23,7 @@ io.use(socketioJwt.authorize({
 server.listen(9090);
 
 
-function postStatus(s){
-  new Promise(function(resolve,reject){
-    rpj.post('https://couchdb.kernel.online/test',s).then(function(doc){
-      console.log(doc)
-    }).catch(function(err){
-      console.log(err)
-    })
 
-  })
-
-}
 
 app.get('/', function (req, res) {
   res.json({online:true})
@@ -41,7 +31,7 @@ app.get('/', function (req, res) {
 
 function authcouch(user,password,db){
   return new Promise(function(resolve,reject){
-    rpj.get('https://'+user+':'+password+'@couchdb.kernel.online/'+db).then(function(){
+    rpj.get('https://'+user+':'+password+'@192.168.122.44:5984/'+db).then(function(){
       resolve({success:true})
     }).catch(function(err){
       reject({error:'wrong credentials'})
@@ -64,9 +54,7 @@ app.get('/ip', function (req, res) {
   res.json({ip:req.connection.remoteAddress})
 });
 
-app.get('/test', function (req, res) {
-  postStatus({ok:'test'});
-});
+
 
 io.on('connection', function (socket) {
 
