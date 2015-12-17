@@ -1,3 +1,73 @@
-var app = require('http').createServer()
-var io = require('socket.io')(app);
-app.listen(9090,'0.0.0.0');
+var app = require('express')();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+var Promise = require('promise');
+var socketioJwt   = require("socketio-jwt");
+var rpj = require('request-promise-json');
+jwt = require('jsonwebtoken');
+var bodyParser = require('body-parser');
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+
+var secret='test public key';
+
+io.use(socketioJwt.authorize({
+  secret: secret,
+  handshake: true
+}));
+
+server.listen(9090);
+
+
+function postStatus(s){
+  new Promise(function(resolve,reject){
+    rpj.post('https://couchdb.kernel.online/test',s).then(function(doc){
+      console.log(doc)
+    }).catch(function(err){
+      console.log(err)
+    })
+
+  })
+
+}
+
+app.get('/', function (req, res) {
+  res.json({online:true})
+});
+
+function authcouch(user,password,db){
+  return new Promise(function(resolve,reject){
+    rpj.get('https://'+user+':'+password+'@couchdb.kernel.online/'+db).then(function(){
+      resolve({success:true})
+    }).catch(function(err){
+      reject({error:'wrong credentials'})
+    })
+  })
+
+}
+
+
+app.post('/login', function (req, res) {
+  authcouch(req.body.user,req.body.password,req.body.db).then(function(){
+    var token = jwt.sign({ user:req.body.user,password:req.body.password,db:req.body.db,serial:req.body.serial }, secret);
+    res.json({success:true,token:token})
+  }).catch(function(err){
+    res.json(err)
+  })
+});
+
+app.get('/ip', function (req, res) {
+  res.json({ip:req.connection.remoteAddress})
+});
+
+app.get('/test', function (req, res) {
+  postStatus({ok:'test'});
+});
+
+io.on('connection', function (socket) {
+
+});
