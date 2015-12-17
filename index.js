@@ -31,7 +31,7 @@ app.get('/', function (req, res) {
 
 function authcouch(user,password,db){
   return new Promise(function(resolve,reject){
-    rpj.get('https://'+user+':'+password+'@192.168.122.44:5984/'+db).then(function(){
+    rpj.get('http://'+user+':'+password+'@192.168.122.44:5984/'+db).then(function(){
       resolve({success:true})
     }).catch(function(err){
       reject({error:'wrong credentials'})
