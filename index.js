@@ -6,6 +6,19 @@ var socketioJwt   = require("socketio-jwt");
 var rpj = require('request-promise-json');
 jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
+var pathExists= require('path-exists');
+var machClients=require('./modules/machClients');
+var audClients=require('./modules/audClients');
+var _=require('lodash');
+
+if (!pathExists.sync('./conf.json')){
+  throw Error('no configuration founded')
+}
+var conf=require('./conf.json')
+
+
+var Machines=new machClients(conf.couchdb);
+var Auditors=new audClients();
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -22,16 +35,16 @@ io.use(socketioJwt.authorize({
 
 server.listen(9090);
 
-
-
-
 app.get('/', function (req, res) {
   res.json({online:true})
 });
 
+
+
+
 function authcouch(user,password,db){
   return new Promise(function(resolve,reject){
-    rpj.get('http://'+user+':'+password+'@192.168.122.44:5984/'+db).then(function(){
+    rpj.get('https://'+user+':'+password+'@couchdb.kernel.online/'+db).then(function(){
       resolve({success:true})
     }).catch(function(err){
       reject({error:'wrong credentials'})
@@ -54,8 +67,111 @@ app.get('/ip', function (req, res) {
   res.json({ip:req.connection.remoteAddress})
 });
 
+app.get('/sockets', function (req, res) {
+  res.json(Machines.sockets())
+});
+app.get('/machines/:serial/sockets', function (req, res) {
+  res.json(Machines.sockets(req.params.serial))
+});
+app.get('/machines', function (req, res) {
+  res.json(Machines.list())
+});
+app.get('/app/:app/machines', function (req, res) {
+  res.json(Machines.serials())
+});
 
+app.get('/machines/:serial/message/:message', function (req, res) {
+  _.map(Machines.ios(req.params.serial),function(socket){
+    socket.emit('message', req.params.message);
+
+  })
+  res.json({})
+
+});
+
+app.post('/machines/:serial/message', function (req, res) {
+  _.map(Machines.list(req.params.serial),function(socketid){
+    io.to(socketid).emit('message', req.body.data);
+  })
+
+});
+app.post('/machines/:serial/data', function (req, res) {
+  _.map(Machines.list(req.params.serial),function(socketid){
+    io.to(socketid).emit('data', req.body.data);
+  })
+});
+app.post('/machines/:serial/exec', function (req, res) {
+  _.map(Machines.list(req.params.serial),function(socketid){
+    io.to(socketid).emit('exec', req.body.data);
+  })
+});
+app.post('/machines/:serial/npm', function (req, res) {
+  _.map(Machines.list(req.params.serial),function(socketid){
+    io.to(socketid).emit('npm', req.body.data);
+  })
+});
+app.post('/machines/:serial/task', function (req, res) {
+  _.map(Machines.list(req.params.serial),function(socketid){
+    io.to(socketid).emit('task', req.body.data);
+  })
+});
 
 io.on('connection', function (socket) {
+  var c = socket.decoded_token;
 
+  if(c.db){
+    console.log(c.db)
+
+    Machines.add(c.user,c.password,c.db,c.serial,socket);
+    _.map(Auditors.forserial(c.serial),function(socketid){
+      io.to(socketid).emit('machine connection', {serial:c.serial});
+    })
+
+    socket.on('disconnect', function () {
+
+      _.map(Auditors.forserial(c.serial),function(socketid){
+        io.to(socketid).emit('machine disconnection', {serial:c.serial});
+      })
+
+      Machines.remove(c.serial,socket.id);
+    });
+    socket.on('message', function (datas) {
+      Machines.push(c.serial,data).then(function(docs){
+
+        _.map(Auditors.forserial(c.serial),function(socketid){
+          io.to(socketid).emit('machine message', {serial:c.serial,data:datas});
+        })
+      })
+    });
+    socket.on('data', function (datas) {
+      Machines.push(c.serial,data).then(function(docs){
+
+        _.map(Auditors.forserial(c.serial),function(socketid){
+          io.to(socketid).emit('machine data', {serial:c.serial,data:datas});
+        })
+      })
+    });
+    socket.on('docs', function (datas) {
+      Machines.push(c.serial,data).then(function(docs){
+        _.map(Auditors.forserial(c.serial),function(socketid){
+          io.to(socketid).emit('machine docs', {serial:c.serial,data:datas});
+        })
+
+      })
+    });
+    socket.on('up', function (datas) {
+      _.map(Auditors.forserial(c.serial),function(socketid){
+        io.to(socketid).emit('machine up', {serial:c.serial});
+      })
+    })
+
+} else{
+  Auditors.add(c.serials,socket.id)
+  socket.on('disconnect', function () {
+    Auditors.remove(socket.id)
+  });
+
+}
+
+console.log('hello! ', socket.id);
 });
