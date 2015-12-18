@@ -1,0 +1,6 @@
+{
+  "couchdb":{
+    "host":"couchdb.kernel.online",
+    "protocol":"https"
+  }
+}
