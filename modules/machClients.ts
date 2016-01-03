@@ -63,7 +63,7 @@ function pushtodb(user: string, password: string, db: string, serial: string, do
 
 }
 
-function exists(all: [IClient], serial, sid): { serial: boolean, socket: boolean } {
+function exists(all: IClient[], serial, sid): { serial: boolean, socket: boolean } {
     let serialexists = false
     let socketexists = false
 
@@ -102,7 +102,7 @@ interface ISocket {
 
 interface IClient {
     serial: string;
-    sockets: [ISocketArray];
+    sockets: ISocketArray[];
     user: string;
     password: string;
     db: string;
@@ -117,11 +117,12 @@ interface ICouchdb {
 
 
 export =class MaClients {
-    all: [IClient];
+    all: IClient[];
     couchdb: ICouchdb;
 
     constructor(db: ICouchdb) {
         this.couchdb = db
+        this.all= [];
     }
 
     add(user: string, password: string, db: string, serial: string, socket: ISocket) {
