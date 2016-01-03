@@ -138,7 +138,7 @@ app.post('/login', function (req, res) {
 });
 
 app.get('/ip', function (req, res) {
-  res.json({ip:req.connection.remoteAddress})
+  res.json({ip:req.headers['x-forwarded-for']})
 });
 
 app.get('/sockets', function (req, res) {
