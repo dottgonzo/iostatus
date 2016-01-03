@@ -1,29 +1,34 @@
-var _=require('lodash');
-var rpj = require('request-promise-json');
+import * as _ from "lodash";
 import * as Promise from "bluebird";
+let rpj = require('request-promise-json');
 
+interface IClients{
+    id:string;
+    serials:[string]
+}
 
-function AClients(){
-  this.all=[]
+export=class AuClients {
+    
+    all:[IClients];
+    
 
-};
-
-AClients.prototype.add = function (sid,serials) {
+add = function (sid:string,serials:string):void {
   this.all.push({id:sid,serials:serials})
 
 };
-AClients.prototype.remove = function (sid) {
-  _.map(this.all,function(s){
+remove = function (sid):void {
+    let all=this.all;
+  _.map(this.all,function(s:IClients){
     if (s.id==sid){
-      _.remove(s)
+      _.pull(all,s)
     }
   })
 
 };
 
-AClients.prototype.forserial = function (serial) {
-var a=[];
-  _.map(this.all,function(s){
+forserial = function (serial):[string] {
+let a:[string];
+  _.map(this.all,function(s:IClients){
     _.map(s.serials,function(ss){
       if(ss==serial){
         a.push(s.id)
@@ -32,4 +37,5 @@ var a=[];
   })
   return a
 };
-module.exports=AClients
+}
+

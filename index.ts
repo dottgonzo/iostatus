@@ -1,24 +1,30 @@
-var app = require('express')();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+import * as _ from "lodash";
 import * as Promise from "bluebird";
-var socketioJwt   = require("socketio-jwt");
-var rpj = require('request-promise-json');
-var jwt = require('jsonwebtoken');
-var bodyParser = require('body-parser');
-var pathExists= require('path-exists');
-var machClients=require('./modules/machClients');
-var audClients=require('./modules/audClients');
-var _=require('lodash');
+import * as bodyParser from "body-parser";
+import * as pathExists from "path-exists";
+import couchjsonconf = require("couchjsonconf");
+let app = require('express')();
+let server = require('http').Server(app);
+let io = require('socket.io')(server);
+
+let socketioJwt   = require("socketio-jwt");
+let rpj = require('request-promise-json');
+let jwt = require('jsonwebtoken');
+
+import machClients = require("./modules/machClients");
+
+import audClients = require("./modules/audClients");
+
 
 if (!pathExists.sync('./conf.json')){
   throw Error('no configuration founded')
 }
-var conf=require('./conf.json')
+let conf=require('./conf.json')
 
+let COUCHDB= new couchjsonconf(conf.couchdb)
 
-var Machines=new machClients(conf.couchdb);
-var Auditors=new audClients();
+let Machines=new machClients(COUCHDB);
+let Auditors=new audClients();
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -42,9 +48,9 @@ app.get('/', function (req, res) {
 
 
 
-function authcouch(user,password,db){
+function authcouch(user:string,password:string,db:string){
   return new Promise(function(resolve,reject){
-    rpj.get(conf.couchdb.protocol+'://'+user+':'+password+'@'+conf.couchdb.host+'/'+db).then(function(){
+    rpj.get(COUCHDB.for(user,password,db)).then(function(){
       resolve({success:true})
     }).catch(function(err){
       reject({error:'wrong credentials'})
@@ -52,7 +58,7 @@ function authcouch(user,password,db){
   })
 }
 
-function authorizesocket(profile){
+function authorizesocket(profile):{}{
 return jwt.sign(profile, conf.secret, { expiresInMinutes: 60*5 });
 }
 
@@ -81,7 +87,7 @@ app.get('/machines', function (req, res) {
   res.json(Machines.list())
 });
 app.get('/app/:app/machines', function (req, res) {
-  res.json(Machines.serials())
+ // res.json(Machines.serials())
 });
 
 app.get('/machines/:serial/message/:message', function (req, res) {
@@ -121,7 +127,7 @@ app.post('/machines/:serial/task', function (req, res) {
 });
 
 io.on('connection', function (socket) {
-  var c = socket.decoded_token;
+  let c = socket.decoded_token;
 
   if(c.db){
     console.log(c.db)
@@ -139,26 +145,26 @@ io.on('connection', function (socket) {
 
       Machines.remove(c.serial,socket.id);
     });
-    socket.on('message', function (datas) {
-      Machines.push(c.serial,datas).then(function(docs){
+    socket.on('message', function (message) {
+      Machines.pushdata(c.serial,'message',message).then(function(docs){
 
         _.map(Auditors.forserial(c.serial),function(socketid){
-          io.to(socketid).emit('machine message', {serial:c.serial,data:datas});
+          io.to(socketid).emit('machine message', {serial:c.serial,data:message});
         })
       })
     });
-    socket.on('data', function (datas) {
-      Machines.push(c.serial,datas).then(function(docs){
+    socket.on('data', function (data) {
+      Machines.pushdata(c.serial,'data',data).then(function(docs){
 
         _.map(Auditors.forserial(c.serial),function(socketid){
-          io.to(socketid).emit('machine data', {serial:c.serial,data:datas});
+          io.to(socketid).emit('machine data', {serial:c.serial,data:data});
         })
       })
     });
-    socket.on('docs', function (datas) {
-      Machines.push(c.serial,datas).then(function(docs){
+    socket.on('docs', function (docs) {
+      Machines.pushdata(c.serial,'docs',docs).then(function(docs){
         _.map(Auditors.forserial(c.serial),function(socketid){
-          io.to(socketid).emit('machine docs', {serial:c.serial,data:datas});
+          io.to(socketid).emit('machine docs', {serial:c.serial,data:docs});
         })
 
       })
