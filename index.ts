@@ -2,18 +2,27 @@ import * as _ from "lodash";
 import * as Promise from "bluebird";
 import * as bodyParser from "body-parser";
 import * as pathExists from "path-exists";
+import * as IO from "socket.io" ;
+import * as express from "express";
+import * as jwt from "jsonwebtoken";
+import * as redis from "redis";
+
 import couchjsonconf = require("couchjsonconf");
-let app = require('express')();
-let server = require('http').Server(app);
-let io = require('socket.io')(server);
+
+import machClients = require("./modules/machClients");
+import audClients = require("./modules/audClients");
 
 let socketioJwt   = require("socketio-jwt");
 let rpj = require('request-promise-json');
-let jwt = require('jsonwebtoken');
+let mosca = require("mosca");
 
-import machClients = require("./modules/machClients");
 
-import audClients = require("./modules/audClients");
+let app = express();
+let server = require('http').Server(app);
+let io = IO(server);
+
+
+
 
 
 if (!pathExists.sync('./conf.json')){
@@ -40,6 +49,61 @@ io.use(socketioJwt.authorize({
 }));
 
 server.listen(conf.port);
+
+
+let ascoltatore = {
+  type: 'redis',
+  redis: redis,
+  db: 12,
+  port: 6379,
+  return_buffers: true, // to handle binary payloads
+  host: "localhost"
+};
+
+let moscaSettings = {
+  port: 1883,
+  backend: ascoltatore,
+  persistence: {
+    factory: mosca.persistence.Redis
+  }
+};
+
+
+let mqttserver = new mosca.Server(moscaSettings);
+mqttserver.on('ready', setupmqtt);
+
+
+mqttserver.on('clientConnected', function(client) {
+    console.log('client connected', client.id);     
+});
+
+// fired when a message is received
+mqttserver.on('published', function(packet, client) {
+  console.log('Published', packet.payload);
+});
+
+// fired when the mqtt server is ready
+function setupmqtt() {
+  console.log('Mosca server is up and running')
+}
+
+
+
+interface ISocket {
+
+        id: string;
+        emit:Function;
+                on:Function;
+    decoded_token:{
+        db:string;
+        user:string;
+        password:string;
+        serial:string;
+    }
+}
+
+
+
 
 app.get('/', function (req, res) {
   res.json({online:true})
@@ -126,7 +190,7 @@ app.post('/machines/:serial/task', function (req, res) {
   })
 });
 
-io.on('connection', function (socket) {
+io.on('connection', function (socket:ISocket) {
   let c = socket.decoded_token;
 
   if(c.db){
@@ -176,7 +240,7 @@ io.on('connection', function (socket) {
     })
 
 } else{
-  Auditors.add(c.serials,socket.id)
+  Auditors.add(c.serial,socket.id)
   socket.on('disconnect', function () {
     Auditors.remove(socket.id)
   });

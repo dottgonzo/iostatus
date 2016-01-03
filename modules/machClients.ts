@@ -89,10 +89,15 @@ interface ISocketArray {
 }
 
 interface ISocket {
-
+                on:Function;
         id: string;
         emit:Function;
-    
+    decoded_token:{
+        db:string;
+        user:string;
+        password:string;
+        serial:string;
+    }
 }
 
 interface IClient {
