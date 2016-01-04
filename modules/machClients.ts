@@ -189,8 +189,6 @@ export =class MaClients {
                     })
                     this.all = remaning;
 
-
-
                 } else {
                     console.log('todo')
                     // this.all=_.reject(this.all, function(el) {
@@ -217,15 +215,14 @@ export =class MaClients {
             _.map(this.all, function(client) {
                 serials.push(client.serial)
             })
-
-
+            
         }
 
         return serials
 
     };
-    ios(serial?: string): [ISocket] {
-        let sockets: [ISocket];
+    ios(serial?: string): ISocket[] {
+        let sockets: ISocket[]=[];
 
         if (serial) {
             _.map(this.all, function(client) {
