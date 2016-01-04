@@ -4,19 +4,19 @@ let rpj = require('request-promise-json');
 
 interface IClients{
     id:string;
-    serials:[string]
+    serials:string[];
 }
 
 export=class AuClients {
     
-    all:[IClients];
+    all:IClients[]=[];
     
 
-add = function (sid:string,serials:string):void {
+add(serials:string[],sid:string):void {
   this.all.push({id:sid,serials:serials})
 
 };
-remove = function (sid):void {
+remove(sid):void {
     let all=this.all;
   _.map(this.all,function(s:IClients){
     if (s.id==sid){
@@ -26,8 +26,8 @@ remove = function (sid):void {
 
 };
 
-forserial = function (serial):[string] {
-let a:[string];
+forserial = function (serial):string[] {
+let a:string[]=[];
   _.map(this.all,function(s:IClients){
     _.map(s.serials,function(ss){
       if(ss==serial){

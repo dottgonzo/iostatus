@@ -99,6 +99,7 @@ interface ISocket {
         user:string;
         password:string;
         serial:string;
+        serials:string[]
     }
 }
 
@@ -240,7 +241,7 @@ io.on('connection', function (socket:ISocket) {
     })
 
 } else{
-  Auditors.add(c.serial,socket.id)
+  Auditors.add(c.serials,socket.id)
   socket.on('disconnect', function () {
     Auditors.remove(socket.id)
   });
