@@ -202,8 +202,8 @@ export =class MaClients {
         }
     };
 
-    list(serial?: string): [string] {
-        let serials: [string];
+    list(serial?: string): string[] {
+        let serials: string[]=[];
         if (serial) {
 
             _.map(this.all, function(client) {
