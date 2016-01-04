@@ -163,7 +163,7 @@ export =class MaClients {
 };
     remove(serial: string, sid: string) {
 
-        let remaning: [IClient];
+        let remaning: IClient[]=[];
 
         for (let soc = 0; soc < this.all.length; soc++) {
 
