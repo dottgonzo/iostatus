@@ -55,12 +55,14 @@ server.listen(conf.port);
 let Aedes = aedes()
 let Aserver = net.createServer(Aedes.handle)
 
-server.listen(1883, function () {
-  console.log('server listening on port', 1883)
-})
-
+Aserver.listen(1883, function () {
+  console.log('MQTT server listening on port', 1883)
+});
 
 Aedes.on('client', function(client) {
+    
+     console.log(JSON.stringify(client))
+    
  console.log("new client"+client.id)
 });
 
