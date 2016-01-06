@@ -1,3 +1,4 @@
+import * as net from "net";
 import * as _ from "lodash";
 import * as Promise from "bluebird";
 import * as bodyParser from "body-parser";
@@ -14,7 +15,7 @@ import audClients = require("./modules/audClients");
 
 let socketioJwt   = require("socketio-jwt");
 let rpj = require('request-promise-json');
-let mosca = require("mosca");
+let aedes = require("aedes");
 
 
 let app = express();
@@ -51,42 +52,42 @@ io.use(socketioJwt.authorize({
 server.listen(conf.port);
 
 
-let ascoltatore = {
-  type: 'redis',
-  redis: redis,
-  db: 12,
-  port: 6379,
-  return_buffers: true, // to handle binary payloads
-  host: "localhost"
-};
+let Aedes = aedes()
+let Aserver = net.createServer(Aedes.handle)
 
-let moscaSettings = {
-  port: 1883,
-  backend: ascoltatore,
-  persistence: {
-    factory: mosca.persistence.Redis
-  }
-};
+server.listen(1883, function () {
+  console.log('server listening on port', 1883)
+})
 
 
-let mqttserver = new mosca.Server(moscaSettings);
-mqttserver.on('ready', setupmqtt);
-
-
-mqttserver.on('clientConnected', function(client) {
-    console.log('client connected', client.id);     
+Aedes.on('client', function(client) {
+ console.log("new client"+client.id)
 });
 
-// fired when a message is received
-mqttserver.on('published', function(packet, client) {
-  console.log('Published', packet.payload);
+Aedes.on('clientDisconnect', function(client) {
+console.log("clientDisconnect")
 });
 
-// fired when the mqtt server is ready
-function setupmqtt() {
-  console.log('Mosca server is up and running')
-}
+Aedes.on('subscribe', function(topic, client) {
+console.log("subscribe")
+});
 
+Aedes.on('unsubscribe', function(topic, client) {
+console.log("unsubscribe")
+});
+
+Aedes.on('publish', function(packet, client) {
+
+  if(! client) return;
+  
+  packet.payloadString = packet.payload.toString();
+  packet.payloadLength = packet.payload.length;
+  packet.payload = JSON.stringify(packet.payload);
+  packet.timestamp = new Date();
+
+console.log("publish")
+
+});
 
 
 interface ISocket {

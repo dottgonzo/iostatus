@@ -1,46 +1,46 @@
 {
-  "name": "iostatus",
-  "version": "0.0.10",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/dottgonzo/iostatus.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/dottgonzo/iostatus/issues"
-  },
-  "dependencies": {
-    "bluebird": "^3.1.1",
-    "body-parser": "^1.14.2",
-    "couchjsonconf": "0.0.16",
-    "express": "^4.13.3",
-    "jsonwebtoken": "^5.4.1",
-    "lodash": "^3.10.1",
-    "mosca": "^0.32.1",
-    "path-exists": "^2.1.0",
-    "redis": "^2.4.2",
-    "request-promise-json": "^1.0.4",
-    "socket.io": "^1.3.7",
-    "socketio-jwt": "^4.3.3"
-  },
-  "devDependencies": {
-    "chai": "^3.4.1",
-    "gulp": "^3.9.0",
-    "gulp-bump": "^1.0.0",
-    "gulp-concat": "^2.6.0",
-    "gulp-filter": "^3.0.1",
-    "gulp-git": "^1.6.1",
-    "gulp-mocha": "^2.2.0",
-    "gulp-prompt": "^0.1.2",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-tag-version": "^1.3.0",
-    "gulp-typescript": "^2.10.0",
-    "mocha": "^2.3.4"
-  }
+    "name": "iostatus",
+    "version": "0.0.11",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dottgonzo/iostatus.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/dottgonzo/iostatus/issues"
+    },
+    "dependencies": {
+        "aedes": "^0.12.3",
+        "bluebird": "^3.1.1",
+        "body-parser": "^1.14.2",
+        "couchjsonconf": "0.0.16",
+        "express": "^4.13.3",
+        "jsonwebtoken": "^5.4.1",
+        "lodash": "^3.10.1",
+        "path-exists": "^2.1.0",
+        "redis": "^2.4.2",
+        "request-promise-json": "^1.0.4",
+        "socket.io": "^1.3.7",
+        "socketio-jwt": "^4.3.3"
+    },
+    "devDependencies": {
+        "chai": "^3.4.1",
+        "gulp": "^3.9.0",
+        "gulp-bump": "^1.0.0",
+        "gulp-concat": "^2.6.0",
+        "gulp-filter": "^3.0.1",
+        "gulp-git": "^1.6.1",
+        "gulp-mocha": "^2.2.0",
+        "gulp-prompt": "^0.1.2",
+        "gulp-sourcemaps": "^1.6.0",
+        "gulp-tag-version": "^1.3.0",
+        "gulp-typescript": "^2.10.0",
+        "mocha": "^2.3.4"
+    }
 }
