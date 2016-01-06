@@ -61,7 +61,7 @@ Aserver.listen(1883, function () {
 
 Aedes.on('client', function(client) {
     
-     console.log(JSON.stringify(client))
+     console.log(client)
     
  console.log("new client"+client.id)
 });
