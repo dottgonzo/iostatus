@@ -59,6 +59,16 @@ Aserver.listen(1883, function () {
   console.log('MQTT server listening on port', 1883)
 });
 
+
+Aedes.authenticate = function (client, username, password, callback) {
+    
+    console.log(client)
+        console.log("auth")
+        
+                console.log(username)
+  // callback(null, username === 'matteo')
+}
+
 Aedes.on('client', function(client) {
     
      console.log(client.username)
