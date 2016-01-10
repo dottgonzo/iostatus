@@ -11,15 +11,11 @@ var bump = require('gulp-bump');
 var prompt = require('gulp-prompt');
 var git = require('gulp-git');
 
-
-
-
-
-gulp.task('patch', ['pushPatch'], function (done) {
+gulp.task('quickpatch', ['pushPatch'], function (done) {
   spawn('npm', ['publish'], { stdio: 'inherit' }).on('close', done);
 });
 
-gulp.task('bumpPatch', ['build'], function () {
+gulp.task('bumpPatch', function () {
     return gulp.src('./package.json').pipe(bump({
         type: 'patch'
     })).pipe(gulp.dest('./'));
