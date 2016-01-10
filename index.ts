@@ -67,7 +67,14 @@ Aedes.authenticate = function(client, username, password, callback) {
     console.log(username)
     console.log( password+"")
     // 
-    callback(null)
+    
+    if(( password+"")){
+            callback(null, true)
+    } else{
+            callback(null)
+    }
+    
+
 }
 
 Aedes.on('client', function(client) {
