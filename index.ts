@@ -67,12 +67,14 @@ Aedes.authenticate = function(client, username, password, callback) {
     console.log(username)
     console.log( password+"")
     // 
-    
-    if(( password+"")){
-            callback(null, true)
-    } else{
-            callback(null)
-    }
+    authcouch(username, password+"","test").then(function(){
+                    callback(null, true)
+    }).catch(function(){
+                    console.log("unauthorized "+username)
+                                        callback(null)
+    })
+
+
     
 
 }
