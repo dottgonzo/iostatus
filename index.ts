@@ -61,18 +61,18 @@ Aserver.listen(1883, function () {
 
 
 Aedes.authenticate = function (client, username, password, callback) {
-    
-    console.log(client)
+ 
+
         console.log("auth")
-        
-                console.log(username)
-  // callback(null, username === 'matteo')
+                        console.log(username)
+                console.log(password)
+  // 
+ callback(null, true)
 }
 
 Aedes.on('client', function(client) {
     
-     console.log(client.username)
-         console.log(client.password)
+ 
  console.log("new client"+client.id)
 });
 
