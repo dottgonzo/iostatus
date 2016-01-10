@@ -67,7 +67,7 @@ Aedes.authenticate = function(client, username, password, callback) {
     console.log(username)
     console.log( password+"")
     // 
-    authcouch(username, password+"","test").then(function(){
+    authcouch(username, password+"","iotc").then(function(){
                     callback(null, true)
     }).catch(function(){
                     console.log("unauthorized "+username)
