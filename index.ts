@@ -65,7 +65,7 @@ Aedes.authenticate = function(client, username, password, callback) {
 
     console.log("auth")
     console.log(username)
-    console.log( new Buffer(password, "utf-8"))
+    console.log( new Buffer(password, "utf-8")+" oki")
     // 
     callback(null, true)
 }
