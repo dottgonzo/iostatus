@@ -110,16 +110,31 @@ Aedes.on('publish', function(packet, client) {
 
     let obj = JSON.parse(packet.payload.toString());
     console.log("publish");
-    
-    if (packet.topic.split("/").length > 1 && packet.topic.split("/")[0] == "data"&&client.couch&&client.couch&&client.couch.username) {
+
+    if (packet.topic.split("/").length > 1 && packet.topic.split("/")[0] == "data" && client.couch && client.couch && client.couch.username) {
         //    rpj.post()
-    console.log("save");
-    
-        rpj.put("http://"+client.couch.username+":"+client.couch.password+"@192.168.122.44:5984/" + client.couch.db + '/'+obj._id, obj).then(function() {
-            console.log("backup");
+        console.log("save");
+        rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + '/' + obj._id).then(function(d) {
+            obj._rev = d._rev;
+            rpj.post("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + '/' + obj._id, obj).then(function() {
+                console.log("backup");
+            }).catch(function(err) {
+                console.log("save error " + err);
+            });
+
         }).catch(function(err) {
-            console.log("save error " + err);
-        });
+            if (err.error == "not_found") {
+                rpj.put("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + '/' + obj._id, obj).then(function() {
+                    console.log("backup");
+                }).catch(function(err) {
+                    console.log("save error " + err);
+                });
+
+            } else {
+                console.log(err)
+            }
+
+        })
 
 
     }
