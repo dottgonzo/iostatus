@@ -71,6 +71,7 @@ Aedes.authenticate = function(client, username, token, callback) {
     // 
     authcouch(username, password, db).then(function() {
         console.log("authorized " + username)
+        client.couch={username:username,password:password,db:db}
         callback(null, true)
     }).catch(function() {
         console.log("unauthorized " + username)
@@ -86,6 +87,9 @@ Aedes.on('client', function(client) {
 
 
     console.log("new client" + client.id)
+    
+        console.log(client.couch)
+    
 });
 
 Aedes.on('clientDisconnect', function(client) {
