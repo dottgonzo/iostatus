@@ -62,8 +62,8 @@ Aserver.listen(1883, function() {
 
 Aedes.authenticate = function(client, username, token, callback) {
 
-    let db = jwt.verify(JSON.parse(token+""),conf.secret).db
-    let password = jwt.verify(JSON.parse(token+""),conf.secret).password
+    let db = jwt.verify(JSON.parse(token + ""), conf.secret).db
+    let password = jwt.verify(JSON.parse(token + ""), conf.secret).password
     console.log("auth")
     console.log(username)
     console.log(password)
@@ -71,7 +71,7 @@ Aedes.authenticate = function(client, username, token, callback) {
     // 
     authcouch(username, password, db).then(function() {
         console.log("authorized " + username)
-        client.couch={username:username,password:password,db:db}
+        client.couch = { username: username, password: password, db: db }
         callback(null, true)
     }).catch(function() {
         console.log("unauthorized " + username)
@@ -87,9 +87,9 @@ Aedes.on('client', function(client) {
 
 
     console.log("new client" + client.id)
-    
-        console.log(client.couch)
-    
+
+    console.log(client.couch)
+
 });
 
 Aedes.on('clientDisconnect', function(client) {
@@ -108,12 +108,24 @@ Aedes.on('publish', function(packet, client) {
 
     if (!client) return;
 
-    packet.payloadString = packet.payload.toString();
-    packet.payloadLength = packet.payload.length;
-    packet.payload = JSON.stringify(packet.payload);
-    packet.timestamp = new Date();
+    let obj = JSON.parse(packet.payload.toString());
+    console.log("publish");
+    
+    if (packet.topic.split("/").length > 1 && packet.topic.split("/")[0] == "data"&&client.couch&&client.couch&&client.couch.username) {
+        //    rpj.post()
+    console.log("save");
+    
+        rpj.post("http://"+client.couch.username+":"+client.couch.password+"@192.168.122.44:5984/" + client.couch.db + '/', obj).then(function() {
+            console.log("backup");
+        }).catch(function(err) {
+            console.log("save error " + err);
+        });
 
-    console.log("publish")
+
+    }
+
+
+
 
 });
 
