@@ -123,7 +123,7 @@ Aedes.on('publish', function(packet, client) {
             });
 
         }).catch(function(err) {
-            if (err.error == "not_found") {
+            if (err.statusCode == 404) {
                 rpj.post("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + '/' + obj._id, obj).then(function() {
                     console.log("backup");
                 }).catch(function(err) {
