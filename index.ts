@@ -115,7 +115,7 @@ Aedes.on('publish', function(packet, client) {
         //    rpj.post()
     console.log("save");
     
-        rpj.post("http://"+client.couch.username+":"+client.couch.password+"@192.168.122.44:5984/" + client.couch.db + '/', obj).then(function() {
+        rpj.put("http://"+client.couch.username+":"+client.couch.password+"@192.168.122.44:5984/" + client.couch.db + '/'+obj._id, obj).then(function() {
             console.log("backup");
         }).catch(function(err) {
             console.log("save error " + err);
