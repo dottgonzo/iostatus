@@ -4,7 +4,10 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+ "start": "forever --sourceDir ./ --uid iostatus -a start index.js",
+    "stop": "forever stop iostatus",
+    "log": "tail -f $(forever logs |grep iostatus| awk '{print$(4)}')"
     },
     "repository": {
         "type": "git",
