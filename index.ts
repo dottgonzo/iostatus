@@ -61,13 +61,13 @@ Aserver.listen(1883, function() {
 
 
 Aedes.authenticate = function(client, username, token, callback) {
-
-    let db = jwt.verify(JSON.parse(token + ""), conf.secret).db
-    let password = jwt.verify(JSON.parse(token + ""), conf.secret).password
-    console.log("auth")
-    console.log(username)
-    console.log(password)
-    console.log(db)
+let decoded:any=jwt.verify(JSON.parse(token + ""), conf.secret); // to be changed in verify
+    let db = decoded.db;
+    let password = decoded.password;
+    console.log("auth");
+    console.log(username);
+    console.log(password);
+    console.log(db);
     // 
     authcouch(username, password, db).then(function() {
         console.log("authorized " + username)
