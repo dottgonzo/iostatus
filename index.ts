@@ -61,25 +61,32 @@ Aserver.listen(1883, function() {
 
 
 Aedes.authenticate = function(client, username, token, callback) {
-    let decoded: any = jwt.verify(JSON.parse(token + ""), conf.secret, { ignoreExpiration: true }); // to be changed in verify
-    let db = decoded.db;
-    let password = decoded.password;
-    console.log("auth");
-    console.log(username);
-    console.log(password);
-    console.log(db);
-    // 
-    authcouch(username, password, db).then(function() {
-        console.log("authorized " + username)
-        client.couch = { username: username, password: password, db: db }
-        callback(null, true)
-    }).catch(function() {
+    try {
+
+
+
+        let decoded: any = jwt.verify(JSON.parse(token + ""), conf.secret, { ignoreExpiration: true }); // to be changed in verify
+        let db = decoded.db;
+        let password = decoded.password;
+        console.log("auth");
+        console.log(username);
+        console.log(password);
+        console.log(db);
+        // 
+        authcouch(username, password, db).then(function() {
+            console.log("authorized " + username)
+            client.couch = { username: username, password: password, db: db }
+            callback(null, true)
+        }).catch(function() {
+            console.log("unauthorized " + username)
+            callback(null)
+        })
+
+
+    } catch (err) {
         console.log("unauthorized " + username)
         callback(null)
-    })
-
-
-
+    }
 
 }
 
