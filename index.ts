@@ -52,8 +52,8 @@ io.use(socketioJwt.authorize({
 server.listen(conf.port);
 
 
-let Aedes = aedes()
-let Aserver = net.createServer(Aedes.handle)
+let Aedes = aedes();
+let Aserver = net.createServer(Aedes.handle);
 
 Aserver.listen(1883, function() {
     console.log('MQTT server listening on port', 1883)
@@ -61,7 +61,7 @@ Aserver.listen(1883, function() {
 
 
 Aedes.authenticate = function(client, username, token, callback) {
-let decoded:any=jwt.verify(JSON.parse(token + ""), conf.secret); // to be changed in verify
+    let decoded: any = jwt.verify(JSON.parse(token + ""), conf.secret, { ignoreExpiration: true }); // to be changed in verify
     let db = decoded.db;
     let password = decoded.password;
     console.log("auth");
