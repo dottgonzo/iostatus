@@ -146,8 +146,9 @@ Aedes.on('publish', function(packet, client) {
             
             if (data[packet.topic.split("/")[0]]) {
 
-                rpj.post(hookurl + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function() {
+                rpj.post(hookurl + "/" + client.couch.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
                     console.log("send to applicantion manager");
+           
                 }).catch(function(err) {
                     console.log(err);
                 })
