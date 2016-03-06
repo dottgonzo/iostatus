@@ -134,6 +134,41 @@ Aedes.on('publish', function(packet, client) {
     let obj = JSON.parse(packet.payload.toString());
     console.log("publish");
 
+
+    rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + '/hooks').then(function(data) {
+
+
+        try {
+
+            let hookurl = data[packet.topic.split("/")[0]];
+            
+            console.log(hookurl);
+            
+            if (data[packet.topic.split("/")[0]]) {
+
+                rpj.post(hookurl + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function() {
+                    console.log("send to applicantion manager");
+                }).catch(function(err) {
+                    console.log(err);
+                })
+
+
+
+            }
+
+
+        } catch (err) {
+
+            console.log(err);
+
+        }
+
+
+    }).catch(function(err) {
+        console.log(err);
+    })
+
+
     if (packet.topic.split("/").length > 1 && packet.topic.split("/")[0] == "data" && client.couch && client.couch && client.couch.username) {
         //    rpj.post()
         console.log("save");
