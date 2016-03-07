@@ -83,9 +83,9 @@ Aedes.authenticate = function(client, username, token, callback) {
             let db = decoded.db;
             let password = decoded.password;
             console.log("auth");
-            console.log(username);
-            console.log(password);
-            console.log(db);
+            console.log(decoded);
+
+
             // 
             authcouch(username, password, db).then(function() {
                 console.log("authorized " + username)
