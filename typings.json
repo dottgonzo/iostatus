@@ -1,0 +1,5 @@
+{
+  "ambientDependencies": {
+    "moment-timezone": "registry:dt/moment-timezone#0.2.5+20160311104026"
+  }
+}

@@ -8,6 +8,9 @@ import * as express from "express";
 import * as jwt from "jsonwebtoken";
 import * as redis from "redis";
 
+let moment= require("moment-timezone");
+
+
 import couchjsonconf = require("couchjsonconf");
 
 import machClients = require("./modules/machClients");
@@ -140,6 +143,13 @@ Aedes.on('publish', function(packet, client) {
 
     if (packet.topic.split("/").length > 1 && packet.topic.split("/")[0] == "data" && client.couch && client.couch && client.couch.username) {
         //    rpj.post()
+        
+        
+        
+        if(client.couch.db=="mach_vumol8_energytrack"||client.couch.db=="mach_sufjt5_energytrack"||client.couch.db=="mach_pctt3v_energytrack"||client.couch.db=="mach_sxcm0q_energytrack"){
+             obj.updatedAt=obj.updatedAt+3600000
+             obj.date=moment.tz(obj.updatedAt,"Europe/Rome").format("YYYYMMDD-HH:mm:ss")
+        }
         console.log("save");
         rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + '/' + obj._id).then(function(d) {
             obj._rev = d._rev;
