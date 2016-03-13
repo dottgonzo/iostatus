@@ -90,7 +90,7 @@ Aedes.authenticate = function(client, username, token, callback) {
             // 
             authcouch(username, password, db).then(function() {
                 console.log("authorized " + username)
-                client.serial=decoded.serial;
+                client.serial = decoded.serial;
                 client.couch = { username: username, password: password, db: db }
                 callback(null, true)
             }).catch(function() {
@@ -113,7 +113,7 @@ Aedes.on('client', function(client) {
 
     console.log("new client" + client.id)
 
-    console.log(client.couch)
+
 
 });
 
@@ -137,40 +137,6 @@ Aedes.on('publish', function(packet, client) {
     console.log("publish");
 
 
-    rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + '/hooks').then(function(data) {
-
-
-        try {
-
-            let hookurl = data[packet.topic.split("/")[0]];
-            
-            console.log(hookurl);
-            
-            if (data[packet.topic.split("/")[0]]) {
-
-                rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
-                    console.log("send to applicantion manager");
-           
-                }).catch(function(err) {
-                    console.log(err);
-                })
-
-
-
-            }
-
-
-        } catch (err) {
-
-            console.log(err);
-
-        }
-
-
-    }).catch(function(err) {
-        console.log(err);
-    })
-
 
     if (packet.topic.split("/").length > 1 && packet.topic.split("/")[0] == "data" && client.couch && client.couch && client.couch.username) {
         //    rpj.post()
@@ -179,6 +145,45 @@ Aedes.on('publish', function(packet, client) {
             obj._rev = d._rev;
             rpj.put("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + '/' + obj._id, obj).then(function() {
                 console.log("backup");
+
+
+                rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + '/hooks').then(function(data) {
+
+
+                    try {
+
+                        let hookurl = data[packet.topic.split("/")[0]];
+
+                        console.log(hookurl);
+
+                        if (data[packet.topic.split("/")[0]]) {
+
+                            rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
+                                console.log("send to applicantion manager");
+
+                            }).catch(function(err) {
+                                console.log(err);
+                            })
+
+
+
+                        }
+
+
+                    } catch (err) {
+
+                        console.log(err);
+
+                    }
+
+
+                }).catch(function(err) {
+                    console.log(err);
+                })
+
+
+
+
             }).catch(function(err) {
                 console.log("save error " + err);
             });
@@ -187,6 +192,44 @@ Aedes.on('publish', function(packet, client) {
             if (err.statusCode == 404) {
                 rpj.put("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + '/' + obj._id, obj).then(function() {
                     console.log("backup");
+
+
+                    rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + '/hooks').then(function(data) {
+
+
+                        try {
+
+                            let hookurl = data[packet.topic.split("/")[0]];
+
+                            console.log(hookurl);
+
+                            if (data[packet.topic.split("/")[0]]) {
+
+                                rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
+                                    console.log("send to applicantion manager");
+
+                                }).catch(function(err) {
+                                    console.log(err);
+                                })
+
+
+
+                            }
+
+
+                        } catch (err) {
+
+                            console.log(err);
+
+                        }
+
+
+                    }).catch(function(err) {
+                        console.log(err);
+                    })
+
+
+
                 }).catch(function(err) {
                     console.log("save error " + err);
                 });
