@@ -146,7 +146,7 @@ Aedes.on('publish', function(packet, client) {
         
         
         // PATCH TO BE REMOVEDDDD
-        if(client.couch.db=="mach_vumol8_energytrack"||client.couch.db=="mach_sufjt5_energytrack"||client.couch.db=="mach_pctt3v_energytrack"||client.couch.db=="mach_sxcm0q_energytrack"){ // PATCH TO BE REMOVEDDDD
+        if(client.couch.db=="mach_vumol8_energytrack"||client.couch.db=="mach_pctt3v_energytrack"||client.couch.db=="mach_sxcm0q_energytrack"){ // PATCH TO BE REMOVEDDDD
              obj.updatedAt=obj.updatedAt+3600000
              obj.date=moment.tz(obj.updatedAt,"Europe/Rome").format("YYYYMMDD-HH:mm:ss")
         }
