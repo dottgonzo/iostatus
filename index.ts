@@ -141,7 +141,7 @@ Aedes.on('publish', function(packet, client) {
 
 
 
-    if (packet.topic.split("/").length > 1 && packet.topic.split("/")[0] == "data" && client.couch && client.couch && client.couch.username) {
+    if (packet.topic.split("/").length > 1 && packet.topic.split("/")[0] == "data" && client.couch && client.couch && client.couch.username && client.serial !== "1XG4hQXuspqo1N4Ehyrkdw" ) {
         //    rpj.post()
         
         
