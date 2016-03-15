@@ -137,14 +137,21 @@ Aedes.on("publish", function(packet, client) {
     let obj = JSON.parse(packet.payload.toString());
     console.log("publish");
 
-if (obj.active && obj.uid==="1XG4hQXuspqo1N4Ehyrkdw"){
+    if (obj.active && obj.uid === "1XG4hQXuspqo1N4Ehyrkdw") {
         console.log("offmode");
-} else{
-    
+        obj = {
+            active: false,
+            date: obj.date,
+            uid: obj.uid,
+            updatedAt: obj.updatedAt
+        };
+
+    }
 
 
 
-    if (packet.topic.split("/").length > 1 && packet.topic.split("/")[0] == "data" && client.couch && client.couch && client.couch.username ) {
+
+    if (packet.topic.split("/").length > 1 && packet.topic.split("/")[0] == "data" && client.couch && client.couch && client.couch.username) {
 
         //    rpj.post()
 
@@ -255,8 +262,8 @@ if (obj.active && obj.uid==="1XG4hQXuspqo1N4Ehyrkdw"){
         });
 
 
+
     }
-}
 
 
 
