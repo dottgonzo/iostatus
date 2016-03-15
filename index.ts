@@ -137,7 +137,7 @@ Aedes.on("publish", function(packet, client) {
     let obj = JSON.parse(packet.payload.toString());
     console.log("publish");
 
-if (obj.uid && obj.uid==="1XG4hQXuspqo1N4Ehyrkdw"){
+if (obj.active && obj.uid==="1XG4hQXuspqo1N4Ehyrkdw"){
         console.log("offmode");
 } else{
     
