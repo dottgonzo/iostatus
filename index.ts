@@ -137,17 +137,6 @@ Aedes.on("publish", function(packet, client) {
     let obj = JSON.parse(packet.payload.toString());
     console.log("publish");
 
-    if (obj.active && obj.uid === "1XG4hQXuspqo1N4Ehyrkdw") {
-        console.log("offmode");
-        obj = {
-            active: false,
-            date: obj.date,
-            uid: obj.uid,
-            updatedAt: obj.updatedAt
-        };
-
-    }
-
 
 
 
@@ -157,7 +146,7 @@ Aedes.on("publish", function(packet, client) {
 
 
         // PATCH TO BE REMOVEDDDD
-        if (client.couch.db === "mach_pctt3v_energytrack" || client.couch.db === "mach_sxcm0q_energytrack") { // PATCH TO BE REMOVEDDDD
+        if (client.couch.db === "mach_sxcm0q_energytrack") { // PATCH TO BE REMOVEDDDD
             obj.updatedAt = obj.updatedAt + 3600000;
             obj.date = moment.tz(obj.updatedAt, "Europe/Rome").format("YYYYMMDD-HH:mm:ss");
         }
