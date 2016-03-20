@@ -145,11 +145,8 @@ Aedes.on("publish", function(packet, client) {
         //    rpj.post()
 
 
-        // PATCH TO BE REMOVEDDDD
-        if (client.couch.db === "mach_sxcm0q_energytrack") { // PATCH TO BE REMOVEDDDD
-            obj.updatedAt = obj.updatedAt + 3600000;
-            obj.date = moment.tz(obj.updatedAt, "Europe/Rome").format("YYYYMMDD-HH:mm:ss");
-        }
+
+
         console.log("save");
         rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/" + obj._id).then(function(d) {
             obj._rev = d._rev;
