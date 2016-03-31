@@ -140,102 +140,15 @@ Aedes.on("publish", function(packet, client) {
 
 
 
-    if (packet.topic.split("/").length > 1 && packet.topic.split("/")[0] == "data" && client.couch && client.couch && client.couch.username) {
+    if (packet.topic.split("/").length > 1 && packet.topic.split("/")[0] === "data" && client.couch && client.couch && client.couch.username) {
 
         //    rpj.post()
 
+        if (obj._id) {
 
-
-
-        console.log("save");
-        rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/" + obj._id).then(function(d) {
-            obj._rev = d._rev;
-            rpj.put("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/" + obj._id, obj).then(function() {
-                console.log("backup");
-
-
-                rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/hooks").then(function(data) {
-
-
-                    try {
-
-                        let hookurl = data[packet.topic.split("/")[0]];
-
-                        console.log(hookurl);
-
-                        if (data[packet.topic.split("/")[0]]) {
-
-                            rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
-                                console.log("send to applicantion manager");
-
-                            }).catch(function(err) {
-                                console.log(err);
-                            });
-
-
-
-                        }
-
-
-                    } catch (err) {
-
-                        console.log(err);
-
-                    }
-
-
-                }).catch(function(err) {
-                    console.log(err);
-                });
-
-
-
-
-            }).catch(function(err) {
-                console.log("save error " + err);
-                
-                
-                
-                rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/hooks").then(function(data) {
-
-
-                    try {
-
-                        let hookurl = data[packet.topic.split("/")[0]];
-
-                        console.log(hookurl);
-
-                        if (data[packet.topic.split("/")[0]]) {
-
-                            rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
-                                console.log("send to applicantion manager");
-
-                            }).catch(function(err) {
-                                console.log(err);
-                            });
-
-
-
-                        }
-
-
-                    } catch (err) {
-
-                        console.log(err);
-
-                    }
-
-
-                }).catch(function(err) {
-                    console.log(err);
-                });
-
-
-                
-            });
-
-        }).catch(function(err) {
-            if (err.statusCode === 404) {
+            console.log("save");
+            rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/" + obj._id).then(function(d) {
+                obj._rev = d._rev;
                 rpj.put("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/" + obj._id, obj).then(function() {
                     console.log("backup");
 
@@ -276,54 +189,181 @@ Aedes.on("publish", function(packet, client) {
 
 
 
+
                 }).catch(function(err) {
                     console.log("save error " + err);
-                    
-                    
-                    
-                rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/hooks").then(function(data) {
 
 
-                    try {
 
-                        let hookurl = data[packet.topic.split("/")[0]];
-
-                        console.log(hookurl);
-
-                        if (data[packet.topic.split("/")[0]]) {
-
-                            rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
-                                console.log("send to applicantion manager");
-
-                            }).catch(function(err) {
-                                console.log(err);
-                            });
+                    rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/hooks").then(function(data) {
 
 
+                        try {
+
+                            let hookurl = data[packet.topic.split("/")[0]];
+
+                            console.log(hookurl);
+
+                            if (data[packet.topic.split("/")[0]]) {
+
+                                rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
+                                    console.log("send to applicantion manager");
+
+                                }).catch(function(err) {
+                                    console.log(err);
+                                });
+
+
+
+                            }
+
+
+                        } catch (err) {
+
+                            console.log(err);
 
                         }
 
 
-                    } catch (err) {
-
+                    }).catch(function(err) {
                         console.log(err);
+                    });
+
+
+
+                });
+
+            }).catch(function(err) {
+                if (err.statusCode === 404) {
+                    rpj.put("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/" + obj._id, obj).then(function() {
+                        console.log("backup");
+
+
+                        rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/hooks").then(function(data) {
+
+
+                            try {
+
+                                let hookurl = data[packet.topic.split("/")[0]];
+
+                                console.log(hookurl);
+
+                                if (data[packet.topic.split("/")[0]]) {
+
+                                    rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
+                                        console.log("send to applicantion manager");
+
+                                    }).catch(function(err) {
+                                        console.log(err);
+                                    });
+
+
+
+                                }
+
+
+                            } catch (err) {
+
+                                console.log(err);
+
+                            }
+
+
+                        }).catch(function(err) {
+                            console.log(err);
+                        });
+
+
+
+                    }).catch(function(err) {
+                        console.log("save error " + err);
+
+
+
+                        rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/hooks").then(function(data) {
+
+
+                            try {
+
+                                let hookurl = data[packet.topic.split("/")[0]];
+
+                                console.log(hookurl);
+
+                                if (data[packet.topic.split("/")[0]]) {
+
+                                    rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
+                                        console.log("send to applicantion manager");
+
+                                    }).catch(function(err) {
+                                        console.log(err);
+                                    });
+
+
+
+                                }
+
+
+                            } catch (err) {
+
+                                console.log(err);
+
+                            }
+
+
+                        }).catch(function(err) {
+                            console.log(err);
+                        });
+
+
+                    });
+
+                } else {
+                    console.log(err);
+                }
+
+            });
+        } else {
+
+            rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/hooks").then(function(data) {
+
+
+                try {
+
+                    let hookurl = data[packet.topic.split("/")[0]];
+
+                    console.log(hookurl);
+
+                    if (data[packet.topic.split("/")[0]]) {
+
+                        rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
+                            console.log("send to applicantion manager");
+
+                        }).catch(function(err) {
+                            console.log(err);
+                        });
+
+
 
                     }
 
 
-                }).catch(function(err) {
+                } catch (err) {
+
                     console.log(err);
-                });
+
+                }
 
 
-                });
-
-            } else {
+            }).catch(function(err) {
                 console.log(err);
-            }
+            });
 
-        });
 
+
+
+
+
+        }
 
 
     }
