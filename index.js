@@ -31,6 +31,7 @@ io.use(socketioJwt.authorize({
     handshake: true
 }));
 server.listen(conf.port);
+console.log(conf.port)
 var Aedes = aedes();
 var Aserver = net.createServer(Aedes.handle);
 Aserver.listen(1883, function () {
