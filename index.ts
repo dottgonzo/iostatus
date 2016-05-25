@@ -147,13 +147,13 @@ Aedes.on("publish", function(packet, client) {
         if (obj._id) {
 
             console.log("save");
-            rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/" + obj._id).then(function(d) {
+            rpj.get("https://" + client.couch.username + ":" + client.couch.password + "@couchdb.kernel.online/" + client.couch.db + "/" + obj._id).then(function(d) {
                 obj._rev = d._rev;
-                rpj.put("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/" + obj._id, obj).then(function() {
+                rpj.put("https://" + client.couch.username + ":" + client.couch.password + "@couchdb.kernel.online/" + client.couch.db + "/" + obj._id, obj).then(function() {
                     console.log("backup");
 
 
-                    rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/hooks").then(function(data) {
+                    rpj.get("https://" + client.couch.username + ":" + client.couch.password + "@couchdb.kernel.online/" + client.couch.db + "/hooks").then(function(data) {
 
 
                         try {
@@ -195,7 +195,7 @@ Aedes.on("publish", function(packet, client) {
 
 
 
-                    rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/hooks").then(function(data) {
+                    rpj.get("https://" + client.couch.username + ":" + client.couch.password + "@couchdb.kernel.online/" + client.couch.db + "/hooks").then(function(data) {
 
 
                         try {
@@ -235,11 +235,11 @@ Aedes.on("publish", function(packet, client) {
 
             }).catch(function(err) {
                 if (err.statusCode === 404) {
-                    rpj.put("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/" + obj._id, obj).then(function() {
+                    rpj.put("https://" + client.couch.username + ":" + client.couch.password + "@couchdb.kernel.online/" + client.couch.db + "/" + obj._id, obj).then(function() {
                         console.log("backup");
 
 
-                        rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/hooks").then(function(data) {
+                        rpj.get("https://" + client.couch.username + ":" + client.couch.password + "@couchdb.kernel.online/" + client.couch.db + "/hooks").then(function(data) {
 
 
                             try {
@@ -280,7 +280,7 @@ Aedes.on("publish", function(packet, client) {
 
 
 
-                        rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/hooks").then(function(data) {
+                        rpj.get("https://" + client.couch.username + ":" + client.couch.password + "@couchdb.kernel.online/" + client.couch.db + "/hooks").then(function(data) {
 
 
                             try {
@@ -324,7 +324,7 @@ Aedes.on("publish", function(packet, client) {
             });
         } else {
 
-            rpj.get("http://" + client.couch.username + ":" + client.couch.password + "@192.168.122.44:5984/" + client.couch.db + "/hooks").then(function(data) {
+            rpj.get("https://" + client.couch.username + ":" + client.couch.password + "@couchdb.kernel.online/" + client.couch.db + "/hooks").then(function(data) {
 
 
                 try {
