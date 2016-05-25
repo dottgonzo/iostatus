@@ -399,9 +399,14 @@ app.get("/", function(req, res) {
 
 function authcouch(user: string, password: string, db: string) {
     return new Promise(function(resolve, reject) {
+        
+        console.log(user,password,db)
+                console.log(COUCHDB.for(user, password, db))
+
         rpj.get(COUCHDB.for(user, password, db)).then(function() {
             resolve({ success: true });
         }).catch(function(err) {
+            console.log(err)
             reject({ error: "wrong credentials" });
         });
     });
