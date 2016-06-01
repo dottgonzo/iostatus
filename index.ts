@@ -431,6 +431,10 @@ app.get("/ip", function(req, res) {
     res.json({ ip: req.headers["x-forwarded-for"] });
 });
 
+app.get("/date", function(req, res) {
+    res.json({ unixtime: parseInt(moment.tz("GMT").format("x")) });
+});
+
 app.get("/sockets", function(req, res) {
     res.json(Machines.sockets());
 });
