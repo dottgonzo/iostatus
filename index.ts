@@ -138,8 +138,6 @@ Aedes.on("publish", function(packet, client) {
     console.log("publish");
 
 
-
-
     if (packet.topic.split("/").length > 1 && packet.topic.split("/")[0] === "data" && client.couch && client.couch && client.couch.username) {
 
         //    rpj.post()
@@ -331,8 +329,6 @@ Aedes.on("publish", function(packet, client) {
 
                     let hookurl = data[packet.topic.split("/")[0]];
 
-                    console.log(hookurl);
-
                     if (data[packet.topic.split("/")[0]]) {
 
                         rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
@@ -399,14 +395,11 @@ app.get("/", function(req, res) {
 
 function authcouch(user: string, password: string, db: string) {
     return new Promise(function(resolve, reject) {
-        
-        console.log(user,password,db)
-                console.log(COUCHDB.for(user, password, db))
 
         rpj.get(COUCHDB.for(user, password, db)).then(function() {
             resolve({ success: true });
         }).catch(function(err) {
-            console.log(err)
+            console.log(err);
             reject({ error: "wrong credentials" });
         });
     });
