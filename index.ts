@@ -328,8 +328,6 @@ Aedes.on("publish", function(packet, client) {
                             console.log(err);
                         });
 
-
-
                     }
 
 
