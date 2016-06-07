@@ -154,16 +154,12 @@ Aedes.on("publish", function(packet, client) {
                     rpj.get("https://" + client.couch.username + ":" + client.couch.password + "@couchdb.kernel.online/" + client.couch.db + "/hooks").then(function(data) {
 
 
-                        try {
-
-                            let hookurl = data[packet.topic.split("/")[0]];
-
-                            console.log(hookurl);
+                        if (data[packet.topic.split("/")[0]]) {
 
                             if (data[packet.topic.split("/")[0]]) {
 
-                                rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
-                                    console.log("send to applicantion manager");
+                                rpj.post(data[packet.topic.split("/")[0]] + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
+                                    console.log("send to applicantion " + data[packet.topic.split("/")[0]]);
 
                                 }).catch(function(err) {
                                     console.log(err);
@@ -174,14 +170,16 @@ Aedes.on("publish", function(packet, client) {
                             }
 
 
-                        } catch (err) {
+                        } else {
 
-                            console.log(err);
+                            console.log("no hooks for " + packet.topic.split("/")[0]);
 
                         }
 
 
                     }).catch(function(err) {
+                        console.log("hooks error");
+
                         console.log(err);
                     });
 
@@ -196,16 +194,12 @@ Aedes.on("publish", function(packet, client) {
                     rpj.get("https://" + client.couch.username + ":" + client.couch.password + "@couchdb.kernel.online/" + client.couch.db + "/hooks").then(function(data) {
 
 
-                        try {
-
-                            let hookurl = data[packet.topic.split("/")[0]];
-
-                            console.log(hookurl);
+                        if (data[packet.topic.split("/")[0]]) {
 
                             if (data[packet.topic.split("/")[0]]) {
 
-                                rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
-                                    console.log("send to applicantion manager");
+                                rpj.post(data[packet.topic.split("/")[0]] + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
+                                    console.log("send to applicantion " + data[packet.topic.split("/")[0]]);
 
                                 }).catch(function(err) {
                                     console.log(err);
@@ -216,16 +210,19 @@ Aedes.on("publish", function(packet, client) {
                             }
 
 
-                        } catch (err) {
+                        } else {
 
-                            console.log(err);
+                            console.log("no hooks for " + packet.topic.split("/")[0]);
 
                         }
 
 
                     }).catch(function(err) {
+                        console.log("hooks error");
+
                         console.log(err);
                     });
+
 
 
 
@@ -236,20 +233,15 @@ Aedes.on("publish", function(packet, client) {
                     rpj.put("https://" + client.couch.username + ":" + client.couch.password + "@couchdb.kernel.online/" + client.couch.db + "/" + obj._id, obj).then(function() {
                         console.log("backup");
 
-
                         rpj.get("https://" + client.couch.username + ":" + client.couch.password + "@couchdb.kernel.online/" + client.couch.db + "/hooks").then(function(data) {
 
 
-                            try {
-
-                                let hookurl = data[packet.topic.split("/")[0]];
-
-                                console.log(hookurl);
+                            if (data[packet.topic.split("/")[0]]) {
 
                                 if (data[packet.topic.split("/")[0]]) {
 
-                                    rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
-                                        console.log("send to applicantion manager");
+                                    rpj.post(data[packet.topic.split("/")[0]] + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
+                                        console.log("send to applicantion " + data[packet.topic.split("/")[0]]);
 
                                     }).catch(function(err) {
                                         console.log(err);
@@ -260,16 +252,19 @@ Aedes.on("publish", function(packet, client) {
                                 }
 
 
-                            } catch (err) {
+                            } else {
 
-                                console.log(err);
+                                console.log("no hooks for " + packet.topic.split("/")[0]);
 
                             }
 
 
                         }).catch(function(err) {
+                            console.log("hooks error");
+
                             console.log(err);
                         });
+
 
 
 
@@ -277,20 +272,15 @@ Aedes.on("publish", function(packet, client) {
                         console.log("save error " + err);
 
 
-
                         rpj.get("https://" + client.couch.username + ":" + client.couch.password + "@couchdb.kernel.online/" + client.couch.db + "/hooks").then(function(data) {
 
 
-                            try {
-
-                                let hookurl = data[packet.topic.split("/")[0]];
-
-                                console.log(hookurl);
+                            if (data[packet.topic.split("/")[0]]) {
 
                                 if (data[packet.topic.split("/")[0]]) {
 
-                                    rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
-                                        console.log("send to applicantion manager");
+                                    rpj.post(data[packet.topic.split("/")[0]] + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
+                                        console.log("send to applicantion " + data[packet.topic.split("/")[0]]);
 
                                     }).catch(function(err) {
                                         console.log(err);
@@ -301,16 +291,19 @@ Aedes.on("publish", function(packet, client) {
                                 }
 
 
-                            } catch (err) {
+                            } else {
 
-                                console.log(err);
+                                console.log("no hooks for " + packet.topic.split("/")[0]);
 
                             }
 
 
                         }).catch(function(err) {
+                            console.log("hooks error");
+
                             console.log(err);
                         });
+
 
 
                     });
@@ -321,18 +314,15 @@ Aedes.on("publish", function(packet, client) {
 
             });
         } else {
-
             rpj.get("https://" + client.couch.username + ":" + client.couch.password + "@couchdb.kernel.online/" + client.couch.db + "/hooks").then(function(data) {
 
 
-                try {
-
-                    let hookurl = data[packet.topic.split("/")[0]];
+                if (data[packet.topic.split("/")[0]]) {
 
                     if (data[packet.topic.split("/")[0]]) {
 
-                        rpj.post(hookurl + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
-                            console.log("send to applicantion manager");
+                        rpj.post(data[packet.topic.split("/")[0]] + "/" + client.serial + "/" + client.couch.db + "/" + client.couch.username + "/" + client.couch.password, { data: obj }).then(function(bro) {
+                            console.log("send to applicantion " + data[packet.topic.split("/")[0]]);
 
                         }).catch(function(err) {
                             console.log(err);
@@ -343,20 +333,18 @@ Aedes.on("publish", function(packet, client) {
                     }
 
 
-                } catch (err) {
+                } else {
 
-                    console.log(err);
+                    console.log("no hooks for " + packet.topic.split("/")[0]);
 
                 }
 
 
             }).catch(function(err) {
+                console.log("hooks error");
+
                 console.log(err);
             });
-
-
-
-
 
 
         }
