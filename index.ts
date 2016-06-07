@@ -138,7 +138,7 @@ Aedes.on("publish", function(packet, client) {
     console.log("publish");
 
 
-    if (packet.topic.split("/").length > 1 && packet.topic.split("/")[0] === "data" && client.couch && client.couch && client.couch.username) {
+    if (packet.topic.split("/").length > 1 && client.couch && client.couch && client.couch.username) {
 
         //    rpj.post()
 
